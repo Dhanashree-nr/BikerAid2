@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { insertBikerSchema, type InsertBiker } from "@shared/schema";
 import { QRGenerator } from "@/components/qr-generator";
+import { ProfilePictureUpload } from "@/components/profile-picture-upload";
 import { User, Heart, Phone, Camera, QrCode } from "lucide-react";
 
 const extendedBikerSchema = insertBikerSchema.extend({
@@ -177,6 +178,15 @@ export default function Register() {
                       <p className="text-red-500 text-sm mt-1">{form.formState.errors.email.message}</p>
                     )}
                   </div>
+                </div>
+                
+                {/* Profile Picture Upload */}
+                <div className="mt-6">
+                  <ProfilePictureUpload
+                    value={form.watch("profilePictureUrl") || ""}
+                    onChange={(url) => form.setValue("profilePictureUrl", url)}
+                    error={form.formState.errors.profilePictureUrl?.message}
+                  />
                 </div>
               </div>
 
