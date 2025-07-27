@@ -1,5 +1,5 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, boolean } from "drizzle-orm/pg-core";
+import { sql, relations } from "drizzle-orm";
+import { pgTable, text, varchar, timestamp, boolean, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -57,6 +57,19 @@ export const insertTestimonialSchema = createInsertSchema(testimonials).omit({
   id: true,
   createdAt: true,
 });
+
+// Relations
+export const usersRelations = relations(users, ({ many }) => ({
+  // Future: user can have many bikers if needed
+}));
+
+export const bikersRelations = relations(bikers, ({ one }) => ({
+  // Future: biker belongs to user if auth is added
+}));
+
+export const testimonialsRelations = relations(testimonials, ({ one }) => ({
+  // Future: testimonial belongs to user if auth is added
+}));
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;

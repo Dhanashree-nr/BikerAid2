@@ -1,4 +1,6 @@
-import { type User, type InsertUser, type Biker, type InsertBiker, type Testimonial, type InsertTestimonial } from "@shared/schema";
+import { type User, type InsertUser, type Biker, type InsertBiker, type Testimonial, type InsertTestimonial, users, bikers, testimonials } from "@shared/schema";
+import { db } from "./db";
+import { eq, count } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -17,70 +19,51 @@ export interface IStorage {
   }>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-  private bikers: Map<string, Biker>;
-  private testimonials: Map<string, Testimonial>;
-  private emergencyScans: number = 0;
-
-  constructor() {
-    this.users = new Map();
-    this.bikers = new Map();
-    this.testimonials = new Map();
-  }
-
+export class DatabaseStorage implements IStorage {
   async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
 
   async getBiker(id: string): Promise<Biker | undefined> {
-    // Find biker by QR code path
-    return Array.from(this.bikers.values()).find(
-      (biker) => biker.qrCode.includes(id)
-    );
+    // Find biker by QR code path that includes the ID
+    const allBikers = await db.select().from(bikers);
+    return allBikers.find(biker => biker.qrCode.includes(id)) || undefined;
   }
 
   async createBiker(bikerData: InsertBiker & { qrCode: string }): Promise<Biker> {
-    const id = randomUUID();
-    const now = new Date();
-    const biker: Biker = { 
-      ...bikerData, 
-      id,
-      isActive: true,
-      createdAt: now,
-      updatedAt: now
-    };
-    this.bikers.set(id, biker);
+    const [biker] = await db
+      .insert(bikers)
+      .values(bikerData)
+      .returning();
     return biker;
   }
 
   async getAllTestimonials(): Promise<Testimonial[]> {
-    return Array.from(this.testimonials.values()).sort(
-      (a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
-    );
+    return await db
+      .select()
+      .from(testimonials)
+      .orderBy(testimonials.createdAt);
   }
 
   async createTestimonial(testimonialData: InsertTestimonial): Promise<Testimonial> {
-    const id = randomUUID();
-    const testimonial: Testimonial = {
-      ...testimonialData,
-      id,
-      createdAt: new Date()
-    };
-    this.testimonials.set(id, testimonial);
+    const [testimonial] = await db
+      .insert(testimonials)
+      .values(testimonialData)
+      .returning();
     return testimonial;
   }
 
@@ -90,7 +73,10 @@ export class MemStorage implements IStorage {
     livesSaved: number;
     avgResponseTime: string;
   }> {
-    const registeredBikers = this.bikers.size;
+    const [{ count: registeredBikers }] = await db
+      .select({ count: count() })
+      .from(bikers);
+    
     const emergencyScans = Math.floor(registeredBikers * 0.05); // 5% scan rate
     const livesSaved = Math.floor(emergencyScans * 0.15); // 15% lives saved rate
     
@@ -103,4 +89,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
