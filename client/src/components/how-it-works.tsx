@@ -40,11 +40,11 @@ export function HowItWorks() {
             <div key={step.number} className="text-center group">
               <div className="relative mb-8">
                 {step.number === 1 ? (
-                  <div className="w-full h-48 bg-gradient-to-br from-red-50 to-gray-100 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow flex items-center justify-center">
-                    <svg className="w-24 h-24 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
+                  <img 
+                    src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+                    alt={step.title}
+                    className="w-full h-48 object-cover rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow"
+                  />
                 ) : (
                   <img 
                     src={step.image} 
