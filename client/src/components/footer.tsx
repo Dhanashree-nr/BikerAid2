@@ -109,14 +109,14 @@ export function Footer() {
           <p className="text-gray-400 text-sm">© 2024 BikerAid by Dhanashree. All rights reserved. Made with ❤️ for biker safety.</p>
           <div className="flex items-center mt-4 md:mt-0">
             <span className="text-gray-400 text-sm">Emergency Hotline: </span>
-            <a href="tel:911" className="text-red-500 font-semibold ml-2 hover:underline">911</a>
+            <a href="tel:108" className="text-red-500 font-semibold ml-2 hover:underline">108</a>
           </div>
         </div>
       </div>
 
       {/* Emergency Call Button (Floating) */}
       <div className="fixed bottom-6 right-6 z-50">
-        <a href="tel:911" className="bg-red-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-red-600 transition-colors animate-pulse">
+        <a href="tel:108" className="bg-red-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-red-600 transition-colors animate-pulse">
           <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
             <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
           </svg>
