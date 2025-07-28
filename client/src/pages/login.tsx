@@ -11,7 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  password: z.string().min(1, "Password is required"),
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
@@ -24,7 +25,8 @@ export default function Login() {
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      username: "",
+      password: "",
     },
   });
 
@@ -45,7 +47,7 @@ export default function Login() {
         const error = await response.json();
         toast({
           title: "Login failed",
-          description: error.message || "Please check your email and try again",
+          description: error.message || "Please check your credentials and try again",
           variant: "destructive",
         });
       }
@@ -68,7 +70,7 @@ export default function Login() {
             Welcome Back
           </CardTitle>
           <CardDescription>
-            Enter your email to access your BikerAid account
+            Enter your username and password to access your BikerAid account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -76,14 +78,31 @@ export default function Login() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="email"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email Address</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input
-                        type="email"
-                        placeholder="your.email@example.com"
+                        placeholder="Enter your username"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Enter your password"
                         {...field}
                       />
                     </FormControl>
