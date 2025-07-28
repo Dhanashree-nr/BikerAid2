@@ -92,17 +92,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Login endpoint - get biker by email (simple login without password for now)
+  // User login endpoint with proper password verification
   app.post("/api/login", async (req, res) => {
     try {
-      const { email } = req.body;
-      if (!email) {
-        return res.status(400).json({ message: "Email is required" });
+      const { username, password } = req.body;
+      if (!username || !password) {
+        return res.status(400).json({ message: "Username and password are required" });
       }
       
-      const biker = await storage.getBikerByEmail(email);
+      // Find user by username
+      const user = await storage.getUserByUsername(username);
+      if (!user) {
+        return res.status(401).json({ message: "Invalid username or password" });
+      }
+      
+      // Check password
+      if (user.password !== password) {
+        return res.status(401).json({ message: "Invalid username or password" });
+      }
+      
+      // Find associated biker profile
+      const biker = await storage.getBikerByEmail(user.username); // Using username as email for now
       if (!biker) {
-        return res.status(404).json({ message: "No account found with this email" });
+        return res.status(404).json({ message: "Please register your emergency information first." });
       }
       
       res.json(biker);
