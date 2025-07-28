@@ -10,14 +10,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userData = insertUserSchema.parse(req.body);
       
-      // Check if username already exists
-      const existingUser = await storage.getUserByUsername(userData.username);
+      // Check if email already exists
+      const existingUser = await storage.getUserByEmail(userData.email);
       if (existingUser) {
-        return res.status(400).json({ message: "Username already exists" });
+        return res.status(400).json({ message: "Email already exists" });
       }
       
       const user = await storage.createUser(userData);
-      res.json({ id: user.id, username: user.username });
+      res.json({ id: user.id, email: user.email });
     } catch (error) {
       res.status(400).json({ message: error instanceof Error ? error.message : "Invalid data" });
     }
@@ -95,24 +95,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // User login endpoint with proper password verification
   app.post("/api/login", async (req, res) => {
     try {
-      const { username, password } = req.body;
-      if (!username || !password) {
-        return res.status(400).json({ message: "Username and password are required" });
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
       }
       
-      // Find user by username
-      const user = await storage.getUserByUsername(username);
+      // Find user by email
+      const user = await storage.getUserByEmail(email);
       if (!user) {
-        return res.status(401).json({ message: "Invalid username or password" });
+        return res.status(401).json({ message: "Invalid email or password" });
       }
       
       // Check password
       if (user.password !== password) {
-        return res.status(401).json({ message: "Invalid username or password" });
+        return res.status(401).json({ message: "Invalid email or password" });
       }
       
       // Find associated biker profile
-      const biker = await storage.getBikerByEmail(user.username); // Using username as email for now
+      const biker = await storage.getBikerByEmail(user.email);
       if (!biker) {
         return res.status(404).json({ message: "Please register your emergency information first." });
       }

@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
 const loginSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
+  email: z.string().email("Please enter a valid email address"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -25,7 +25,7 @@ export default function Login() {
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -70,7 +70,7 @@ export default function Login() {
             Welcome Back
           </CardTitle>
           <CardDescription>
-            Enter your username and password to access your BikerAid account
+            Enter your email and password to access your BikerAid account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -78,13 +78,14 @@ export default function Login() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="username"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Email Address</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Enter your username"
+                        type="email"
+                        placeholder="Enter your email"
                         {...field}
                       />
                     </FormControl>
