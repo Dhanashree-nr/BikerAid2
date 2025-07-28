@@ -10,7 +10,7 @@ export default function Profile() {
   const bikerId = params?.id;
 
   const { data: biker, isLoading, error } = useQuery<Biker>({
-    queryKey: ['/api/bikers', bikerId],
+    queryKey: ['/api/profile', bikerId],
     enabled: !!bikerId,
   });
 

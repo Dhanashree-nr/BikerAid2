@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -25,8 +25,17 @@ type BikerFormData = InsertBiker & { terms?: string };
 export default function Register() {
   const [registrationComplete, setRegistrationComplete] = useState(false);
   const [qrCode, setQrCode] = useState("");
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Check if user is logged in
+  useEffect(() => {
+    const user = localStorage.getItem("currentUser");
+    if (user) {
+      setCurrentUser(JSON.parse(user));
+    }
+  }, []);
 
   const form = useForm<BikerFormData>({
     resolver: zodResolver(extendedBikerSchema),
@@ -74,6 +83,41 @@ export default function Register() {
     const { terms, ...bikerData } = data;
     registerMutation.mutate(bikerData);
   };
+
+  // If user is not logged in, redirect to signup
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+              Account Required
+            </CardTitle>
+            <CardContent className="pt-6">
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                You need to create an account before registering your emergency information.
+              </p>
+              <div className="space-y-3">
+                <Button 
+                  onClick={() => window.location.href = "/signup"}
+                  className="w-full bg-red-500 hover:bg-red-600"
+                >
+                  Create New Account
+                </Button>
+                <Button 
+                  onClick={() => window.location.href = "/login"}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Sign In to Existing Account
+                </Button>
+              </div>
+            </CardContent>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
 
   if (registrationComplete) {
     return (

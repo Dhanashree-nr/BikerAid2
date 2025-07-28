@@ -40,9 +40,9 @@ export function Navbar() {
                 Sign In
               </Button>
             </Link>
-            <Link href="/register">
+            <Link href="/signup">
               <Button className="bg-red-500 text-white hover:bg-red-600 transition-colors font-medium">
-                Register Now
+                Get Started
               </Button>
             </Link>
           </div>
@@ -72,9 +72,9 @@ export function Navbar() {
                       Sign In
                     </Button>
                   </Link>
-                  <Link href="/register" onClick={() => setIsOpen(false)}>
+                  <Link href="/signup" onClick={() => setIsOpen(false)}>
                     <Button className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors font-medium">
-                      Register Now
+                      Get Started
                     </Button>
                   </Link>
                 </div>

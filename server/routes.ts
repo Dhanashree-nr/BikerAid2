@@ -1,10 +1,28 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertBikerSchema, insertTestimonialSchema } from "@shared/schema";
+import { insertBikerSchema, insertTestimonialSchema, insertUserSchema } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // User signup endpoint
+  app.post("/api/signup", async (req, res) => {
+    try {
+      const userData = insertUserSchema.parse(req.body);
+      
+      // Check if username already exists
+      const existingUser = await storage.getUserByUsername(userData.username);
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+      
+      const user = await storage.createUser(userData);
+      res.json({ id: user.id, username: user.username });
+    } catch (error) {
+      res.status(400).json({ message: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
+
   // Biker registration endpoint
   app.post("/api/bikers", async (req, res) => {
     try {
@@ -17,12 +35,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get biker profile by ID
+  // Get biker profile by ID (for dashboard)
   app.get("/api/bikers/:id", async (req, res) => {
     try {
       const biker = await storage.getBiker(req.params.id);
       if (!biker) {
         return res.status(404).json({ message: "Biker not found" });
+      }
+      res.json(biker);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get biker profile by QR ID (for emergency profile viewing)
+  app.get("/api/profile/:qrId", async (req, res) => {
+    try {
+      const biker = await storage.getBikerByQRId(req.params.qrId);
+      if (!biker) {
+        return res.status(404).json({ message: "Profile not found" });
       }
       res.json(biker);
     } catch (error) {
