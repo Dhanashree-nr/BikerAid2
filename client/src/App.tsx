@@ -10,6 +10,8 @@ import Register from "@/pages/register";
 import Profile from "@/pages/profile";
 import About from "@/pages/about";
 import Testimonials from "@/pages/testimonials";
+import Login from "@/pages/login";
+import Dashboard from "@/pages/dashboard";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -20,6 +22,8 @@ function Router() {
       <Route path="/profile/:id" component={Profile} />
       <Route path="/about" component={About} />
       <Route path="/testimonials" component={Testimonials} />
+      <Route path="/login" component={Login} />
+      <Route path="/dashboard/:id" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
   );
