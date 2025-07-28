@@ -20,10 +20,10 @@ export function HeroSection() {
             BikerAid helps first responders access critical medical information instantly through QR codes on helmets. Be prepared. Stay safe. Save lives.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <Link href="/register">
+            <Link href="/login">
               <Button size="lg" className="bg-red-500 text-white px-8 py-4 text-lg font-semibold hover:bg-red-600 transition-colors">
                 <UserPlus className="mr-2 h-5 w-5" />
-                Register Now - It's Free
+                Get Started - It's Free
               </Button>
             </Link>
           </div>
