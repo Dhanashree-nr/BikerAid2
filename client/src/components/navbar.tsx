@@ -35,6 +35,11 @@ export function Navbar() {
                 {item.label}
               </Link>
             ))}
+            <Link href="/login">
+              <Button variant="outline" className="mr-2">
+                Sign In
+              </Button>
+            </Link>
             <Link href="/register">
               <Button className="bg-red-500 text-white hover:bg-red-600 transition-colors font-medium">
                 Register Now
@@ -62,8 +67,13 @@ export function Navbar() {
                       {item.label}
                     </Link>
                   ))}
+                  <Link href="/login" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" className="w-full mt-4">
+                      Sign In
+                    </Button>
+                  </Link>
                   <Link href="/register" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors font-medium mt-4">
+                    <Button className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors font-medium">
                       Register Now
                     </Button>
                   </Link>

@@ -61,6 +61,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Login endpoint - get biker by email (simple login without password for now)
+  app.post("/api/login", async (req, res) => {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+      
+      const biker = await storage.getBikerByEmail(email);
+      if (!biker) {
+        return res.status(404).json({ message: "No account found with this email" });
+      }
+      
+      res.json(biker);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Update biker information
+  app.put("/api/bikers/:id", async (req, res) => {
+    try {
+      const updates = insertBikerSchema.partial().parse(req.body);
+      const updatedBiker = await storage.updateBiker(req.params.id, updates);
+      
+      if (!updatedBiker) {
+        return res.status(404).json({ message: "Biker not found" });
+      }
+      
+      res.json(updatedBiker);
+    } catch (error) {
+      res.status(400).json({ message: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
