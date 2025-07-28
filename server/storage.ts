@@ -8,6 +8,7 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   getBiker(id: string): Promise<Biker | undefined>;
+  getBikerByQRId(qrId: string): Promise<Biker | undefined>;
   getBikerByEmail(email: string): Promise<Biker | undefined>;
   createBiker(biker: InsertBiker & { qrCode: string }): Promise<Biker>;
   updateBiker(id: string, updates: Partial<InsertBiker>): Promise<Biker | undefined>;
@@ -41,9 +42,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getBiker(id: string): Promise<Biker | undefined> {
+    const [biker] = await db.select().from(bikers).where(eq(bikers.id, id));
+    return biker || undefined;
+  }
+
+  async getBikerByQRId(qrId: string): Promise<Biker | undefined> {
     // Find biker by QR code path that includes the ID
     const allBikers = await db.select().from(bikers);
-    return allBikers.find(biker => biker.qrCode.includes(id)) || undefined;
+    return allBikers.find(biker => biker.qrCode.includes(qrId)) || undefined;
   }
 
   async getBikerByEmail(email: string): Promise<Biker | undefined> {

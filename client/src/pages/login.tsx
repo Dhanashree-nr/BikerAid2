@@ -108,9 +108,9 @@ export default function Login() {
               <Button
                 variant="link"
                 className="p-0 h-auto"
-                onClick={() => setLocation("/register")}
+                onClick={() => setLocation("/signup")}
               >
-                Register now
+                Sign up now
               </Button>
             </p>
           </div>

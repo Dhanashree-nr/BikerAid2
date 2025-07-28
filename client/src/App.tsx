@@ -11,6 +11,7 @@ import Profile from "@/pages/profile";
 import About from "@/pages/about";
 import Testimonials from "@/pages/testimonials";
 import Login from "@/pages/login";
+import Signup from "@/pages/signup";
 import Dashboard from "@/pages/dashboard";
 import NotFound from "@/pages/not-found";
 
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/testimonials" component={Testimonials} />
       <Route path="/login" component={Login} />
+      <Route path="/signup" component={Signup} />
       <Route path="/dashboard/:id" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
